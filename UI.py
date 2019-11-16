@@ -1,6 +1,6 @@
 # from tk import Stringvar
 from tkinter import *
-
+from tkinter import ttk
 from PIL import Image, ImageTk, ImageDraw, ImageFilter
 class Window(Frame) :
 
@@ -15,8 +15,8 @@ class Window(Frame) :
         self.master.title("GUI")
         self.pack(fill=BOTH, expand=1)
 
-        # quitButton = Button(self, text="Quit", command=self.client_exit);
-        # quitButton.place(x=0, y=0)
+        quitButton = Button(self, text="Quit", command=self.client_exit);
+        quitButton.place(x=0, y=0)
 
         menu = Menu(self.master)
         self.master.config(menu = menu)
@@ -148,9 +148,11 @@ root = Tk()
 variable = StringVar(root)
 variable.set(OptionsPlayer1[0])
 player1Option = OptionMenu(root, variable, *OptionsPlayer1)
+
 player1Option.pack(side=LEFT)
+# print(variable.get())
 variable2 = StringVar(root)
-variable2.set(OptionsSpace1[0])
+variable2.set(OptionsSpace1[0])# REVIEW:
 player1Place = OptionMenu(root, variable2, *OptionsSpace1)
 player1Place.pack(side=LEFT)
 
@@ -167,7 +169,37 @@ player2Place.pack(side=RIGHT)
 # player1Option.pack(pady = 0)
 root.geometry("3000x700")
 
-app = Window(root)
+# quitButton = Button(f, text="Submit", command= showCircle(variable2.get()))
+# quitButton.place(x=0, y=0)
+def player1Player() :
+    print("",variable.get())
 
+def player1Place() :
+    print("", varibale1.get())
+
+
+def player2Option() :
+    print("",variable2.get())
+
+def players2Place() :
+    print("", variable3.get())
+
+
+button1 = ttk.Button(root, text="submit players 1 option")
+button1.pack()
+button1.config(command=player1Player)
+
+button1 = ttk.Button(root, text="submit players 1 place")
+button1.pack()
+button1.config(command=player1Place)
+
+button1 = ttk.Button(root, text="submit players 2 option")
+button1.pack()
+button1.config(command=player2Option)
+
+button1 = ttk.Button(root, text="submit players 2 place")
+button1.pack()
+button1.config(command=players2Place)
+app = Window(root)
 
 root.mainloop()
