@@ -152,8 +152,12 @@ def printBoard():
     print("")
 
 
-while(isWin() == ""):
-    command = input("Command (place or observe): ")
-    place = input("Enter position: ")
-    printBoard()
+# while(isWin() == ""):
+#     command = input("Command (place or observe): ")
+#     place = input("Enter position: ")
+place(4)
+place(4)
+observe(4)
+printBoard()
+print(opacityX,opacityO)
 
