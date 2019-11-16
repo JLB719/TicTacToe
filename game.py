@@ -73,11 +73,7 @@ currentPlayer = "X"
 playableSlots = [True,True,True,True,True,True,True,True,True]
 
 def place (position):
-    global currentPlayer
-    global opacityX
-    global opacityO
-    global playsX
-    global playsO
+    global currentPlayer, opacityX, opacityO, playsX, playsO
     #Assuming they cannot place in a taken position
     if (currentPlayer == "X"):
         playsX[position] += 1
@@ -95,12 +91,22 @@ def place (position):
         currentPlayer = "X"
 
 def observe (position):
+    global opacityX, opacityO, playableSlots, playsX, playsO, currentPlayer
     (x,o) = observeSquare(position)
-    print("x=",x,", o=",o)
-    opacityX[position] = (255, 0)[x]
-    opacityO[position] = (255, 0)[o]
-    if (x or o):
+    if (x):
+        print("X is at position", position)
+        opacityX[position] = 0
         playableSlots[position] = False
+    if (o):
+        print("O is at position", position)
+        opacityO[position] = 0
+        playableSlots[position] = False
+    playsX[position] = 0
+    playsO[position] = 0
+    if (currentPlayer == "X"):
+        currentPlayer = "O"
+    else:
+        currentPlayer = "X"
 
 def isWin():
     global opacityX, opacityO
@@ -142,22 +148,51 @@ def isWin():
     return winStr
 
 def printBoard():
-    global playsX, playsO
+    global playsX, playsO, opacityX, opacityO, playableSlots
+    array = ["","","","","","","","",""]
+    for i in range(9):
+        if ((opacityX[i] == 0) or (opacityO[i] == 0)):
+            if ((opacityX[i] == 0) and (opacityO[i] == 0)):
+                array[i] = "    X O    "
+            elif (opacityX[i] == 0):
+                array[i] = "     X     "
+            else:
+                array[i] = "     O     "
+        else:  
+            array[i] = ("X: "+str(playsX[i])+" | O: "+str(playsO[i]))
+            
     print("      ------------GAME-------------")
-    print("X:",playsX[0],"|O",playsO[0],"    ", "X:",playsX[1],"|O",playsO[1],"    ", "X:",playsX[2],"|O",playsO[2],"    ")
-    print("")
-    print("X:",playsX[3],"|O",playsO[3],"    ", "X:",playsX[4],"|O",playsO[4],"    ", "X:",playsX[5],"|O",playsO[5],"    ")
-    print("")
-    print("X:",playsX[6],"|O",playsO[6],"    ", "X:",playsX[7],"|O",playsO[7],"    ", "X:",playsX[8],"|O",playsO[8],"    ")
-    print("")
+    print(array[0],"  | ", array[1],"  | ", array[2])
+    print("      -----------------------------")
+    print(array[3],"  | ", array[4],"  | ", array[5])
+    print("      -----------------------------")
+    print(array[6],"  | ", array[7],"  | ", array[8])
+    print("      -----------------------------")
+    playablePositions = ""
+    for i in range(9):
+        if (playableSlots[i]):
+            playablePositions += (str(i)+" ")
+    print("playable positions:",playablePositions)
 
-
-# while(isWin() == ""):
-#     command = input("Command (place or observe): ")
-#     place = input("Enter position: ")
-place(4)
-place(4)
-observe(4)
 printBoard()
-print(opacityX,opacityO)
+while(isWin() == ""):
+    print("Current player:",currentPlayer)
+    command = input("Command (place or observe): ")
+    pos = int(input("Enter position: "))
+    print("You entered \"",command,"\" at position", pos)
+    print((command == "place"), (command == "observe"))
+    if (command == "place"):
+        place(pos)
+    elif (command == "observe"):
+        observe(pos)
+    printBoard()
+print(isWin())
+    
+
+
+# place(4)
+# place(4)
+# observe(4)
+# printBoard()
+# print(opacityX,opacityO)
 
