@@ -151,38 +151,9 @@ def printBoard():
     print("X:",playsX[6],"|O",playsO[6],"    ", "X:",playsX[7],"|O",playsO[7],"    ", "X:",playsX[8],"|O",playsO[8],"    ")
     print("")
 
-#player X
-place(4)
-#Player Y
-place(4)
-#player X
-place(8)
-place(4)
-place(1)
-place(0)
-place(1)
-place(0)
-place(1)
-place(0)
-place(2)
-place(4)
-place(2)
-place(2)
-place(2)
-place(2)
-place(1)
-place(0)
-place(1)
-place(0)
-place(1)
-place(0)
 
-#gameboard
-printBoard()
-
-observe(0)
-observe(1)
-observe(2)
-print(opacityX,", ",opacityO)
-print(isWin())
+while(isWin() == ""):
+    command = input("Command (place or observe): ")
+    place = input("Enter position: ")
+    printBoard()
 
