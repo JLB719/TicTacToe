@@ -1,6 +1,6 @@
 # from tk import Stringvar
 from tkinter import *
-
+from tkinter import ttk
 from PIL import Image, ImageTk, ImageDraw, ImageFilter
 class Window(Frame) :
 
@@ -15,8 +15,8 @@ class Window(Frame) :
         self.master.title("GUI")
         self.pack(fill=BOTH, expand=1)
 
-        # quitButton = Button(self, text="Quit", command=self.client_exit);
-        # quitButton.place(x=0, y=0)
+        quitButton = Button(self, text="Quit", command=self.client_exit);
+        quitButton.place(x=0, y=0)
 
         menu = Menu(self.master)
         self.master.config(menu = menu)
@@ -28,6 +28,10 @@ class Window(Frame) :
         edit = Menu(menu)
         edit.add_command(label = 'Show Image', command=self.showBoard())
         edit.add_command(label='Show Text', command=self.showTxt)
+        edit.add_command(label = "Show Player1", command=self.showPlayer1())
+        edit.add_command(label = "Show Player2", command=self.showPlayer2())
+        edit.add_command(label = "Show Cross", command=self.showCross("(1,1)"))
+        edit.add_command(label = "Show Circle", command=self.showCircle("(1,1)"))
         menu.add_cascade(label='Edit', menu=edit)
         # self.variable = tkinter.Stringvar()
 
@@ -46,6 +50,59 @@ class Window(Frame) :
         img = Label(self, image=render)
         img.image = render
         img.place(x=0,y=0)
+    def showCross(self, option) :
+        load = Image.open("Cross.jpg")
+        newSize = (150, 150)
+        load = load.resize(newSize)
+        render = ImageTk.PhotoImage(load)
+        img = Label(self, image=render)
+        img.image = render
+        if (option == "(1,1)") :
+            img.place(x=300, y=220)
+        elif (option == "(2,1)") :
+            img.place(x=650, y=220)
+        elif (option == "(3,1)") :
+            img.place(x = 950, y = 220)
+        elif (option == "(1,2)") :
+            img.place(x = 300, y=420)
+        elif (option == "(2,2)") :
+            img.place(x=650, y=420)
+        elif (option == "(3,2)") :
+            img.place(x=950, y=420)
+        elif (option == "(1,3)") :
+            img.place(x=300, y=620)
+        elif (option == "(2,3)") :
+            img.place(x=650, y = 620)
+        else :
+            img.place(x=950, y=620)
+
+
+    def showCircle(self, option) :
+        load = Image.open("Nought.jpg")
+        newSize = (140, 140)
+        load = load.resize(newSize)
+        render = ImageTk.PhotoImage(load)
+        img = Label(self, image=render)
+        img.image= render
+        if (option == "(1,1)") :
+            img.place(x=300, y=235)
+        elif (option == "(2,1)") :
+            img.place(x=650, y=235)
+        elif (option == "(3,1)") :
+            img.place(x=950, y=235)
+        elif (option == "(1,2)") :
+            img.place(x=300, y=435)
+        elif (option == "(2,2)") :
+            img.place(x=650, y=435)
+        elif (option == "(3,2)") :
+            img.place(x=950, y = 435)
+        elif (option == "(1,3)") :
+            img.place(x=300, y=600)
+        elif (option == "(2,3)") :
+            img.place(x=650, y=600)
+        else :
+            img.place(x=950, y=600)
+
 
     def showBoard(self) :
         load = Image.open("Board.jpg")
@@ -54,11 +111,19 @@ class Window(Frame) :
         render = ImageTk.PhotoImage(load)
         img = Label(self, image=render)
         img.image = render
-        img.place(x=100, y = 200)
+        img.place(x=200, y = 200)
 
     def showTxt(self) :
         text = Label(self, text='Hey there')
         text.pack()
+
+    def showPlayer1(self) :
+        text = Label(self, text='Player 1', font=(None, 20))
+        text.pack(side=LEFT)
+
+    def showPlayer2(self) :
+        text = Label(self, text='Player 2', font=(None, 20))
+        text.pack(side=RIGHT)
 
 OptionsPlayer1 = [
     "Select one",
@@ -83,9 +148,11 @@ root = Tk()
 variable = StringVar(root)
 variable.set(OptionsPlayer1[0])
 player1Option = OptionMenu(root, variable, *OptionsPlayer1)
+
 player1Option.pack(side=LEFT)
+# print(variable.get())
 variable2 = StringVar(root)
-variable2.set(OptionsSpace1[0])
+variable2.set(OptionsSpace1[0])# REVIEW:
 player1Place = OptionMenu(root, variable2, *OptionsSpace1)
 player1Place.pack(side=LEFT)
 
@@ -100,9 +167,39 @@ player2Place = OptionMenu(root, variable4, *OptionsSpace1)
 player2Place.pack(side=RIGHT)
 
 # player1Option.pack(pady = 0)
-root.geometry("3000x900")
+root.geometry("3000x700")
 
+# quitButton = Button(f, text="Submit", command= showCircle(variable2.get()))
+# quitButton.place(x=0, y=0)
+def player1Player() :
+    print("",variable.get())
+
+def player1Place() :
+    print("", varibale1.get())
+
+
+def player2Option() :
+    print("",variable2.get())
+
+def players2Place() :
+    print("", variable3.get())
+
+
+button1 = ttk.Button(root, text="submit players 1 option")
+button1.pack()
+button1.config(command=player1Player)
+
+button1 = ttk.Button(root, text="submit players 1 place")
+button1.pack()
+button1.config(command=player1Place)
+
+button1 = ttk.Button(root, text="submit players 2 option")
+button1.pack()
+button1.config(command=player2Option)
+
+button1 = ttk.Button(root, text="submit players 2 place")
+button1.pack()
+button1.config(command=players2Place)
 app = Window(root)
-
 
 root.mainloop()
