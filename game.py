@@ -1,3 +1,63 @@
+
+from qiskit import QuantumCircuit, execute, Aer, IBMQ
+from qiskit.compiler import transpile, assemble
+from qiskit.tools.jupyter import *
+from qiskit.visualization import *
+import math
+import numpy as np
+# Loading your IBM Q account(s)
+#provider = IBMQ.load_account()
+
+backend_sim = Aer.get_backend('qasm_simulator')
+
+quantumXzero = QuantumCircuit(1, 1)
+quantumXone = QuantumCircuit(1, 1)
+quantumXtwo = QuantumCircuit(1, 1)
+quantumXthree = QuantumCircuit(1, 1)
+quantumXfour = QuantumCircuit(1, 1)
+quantumXfive = QuantumCircuit(1, 1)
+quantumXsix = QuantumCircuit(1, 1)
+quantumXseven = QuantumCircuit(1, 1)
+quantumXeight = QuantumCircuit(1, 1)
+quantumYzero = QuantumCircuit(1, 1)
+quantumYone = QuantumCircuit(1, 1)
+quantumYtwo = QuantumCircuit(1, 1)
+quantumYthree = QuantumCircuit(1, 1)
+quantumYfour = QuantumCircuit(1, 1)
+quantumYfive = QuantumCircuit(1, 1)
+quantumYsix = QuantumCircuit(1, 1)
+quantumYseven = QuantumCircuit(1, 1)
+quantumYeight = QuantumCircuit(1, 1)
+
+xCircuitLookup = {0 : quantumXzero, 1 : quantumXone, 2 : quantumXtwo, 3 : quantumXthree, 4 : quantumXfour, 5 : quantumXfive, 6 : quantumXsix, 7 : quantumXseven, 8 : quantumXeight}
+yCircuitLookup = {0 : quantumYzero, 1 : quantumYone, 2 : quantumYtwo, 3 : quantumYthree, 4 : quantumYfour, 5 : quantumYfive, 6 : quantumYsix, 7 : quantumYseven, 8 : quantumYeight}
+backend_sim = Aer.get_backend('qasm_simulator')
+
+def observeSquare (square):
+    x = True
+    xBox = xCircuitLookup[square]
+    xBox.measure(range(1),range(1))
+    xjob = execute(xBox, backend_sim, shots=1)
+    xresult = xjob.result()
+    xcount = xresult.get_counts()
+    if ('0' in xcount):
+        x = False
+    y = True
+    yBox = yCircuitLookup[square]
+    yBox.measure(range(1),range(1))
+    yjob = execute(yBox, backend_sim, shots=1)
+    yresult = yjob.result()
+    ycount = yresult.get_counts()
+    if ('0' in ycount):
+        y = False
+    return (x, y)
+
+def xPlaySquare (square, xPlayed):
+    xCircuitLookup[square].rx(2*np.arccos(1/(np.sqrt(2**xPlayed))) - 2*np.arccos(1/(np.sqrt(2**(xPlayed-1)))), 0)
+    
+def yPlaySquare (square, yPlayed):
+    yCircuitLookup[square].rx(2*np.arccos(1/(np.sqrt(2**yPlayed))) - 2*np.arccos(1/(np.sqrt(2**(yPlayed-1)))), 0)
+
 # Board
 # 0|1|2
 # -----
@@ -23,37 +83,24 @@ def place (position):
         playsX[position] += 1
         n = playsX[position]
         opacityX[position] = int((1-(((2**n)-1)/(2**n)))*255)
-        #TODO Jake's qubit gate stuff
-        #xPlaySquare(position, n)
+        xPlaySquare(position, n)
+        print("x poistion =",position,"x n =",n)
         currentPlayer = "O"
     else:
         playsO[position] += 1
         n = playsO[position]
         opacityO[position] = int((1-(((2**n)-1)/(2**n)))*255)
-        #TODO Jake's qubit gate stuff
-        #position[x]   xPlaySquare(position, n)
+        yPlaySquare(position, n)
+        print("o poistion =",position,"o n =",n)
         currentPlayer = "X"
 
 def observe (position):
-    #(x,o) = observeSquare(position)
-    (x,o) = (True, True)
+    (x,o) = observeSquare(position)
+    print("x=",x,", o=",o)
     opacityX[position] = (255, 0)[x]
     opacityO[position] = (255, 0)[o]
     if (x or o):
         playableSlots[position] = False
-
-
-def entangle (position1, position2):
-    currentPlayer = currentPlayer
-
-def renderBoard ():
-    
-
-    currentPlayer = currentPlayer
-    #render opacityX
-    #render opacityO
-    #if either is
-    #render entanglement
 
 def isWin():
     global opacityX, opacityO
@@ -94,7 +141,16 @@ def isWin():
 
     return winStr
 
-print("Current player = " + currentPlayer + ", is equal to x? " + (("True","False")[(currentPlayer == "X")]))
+def printBoard():
+    global playsX, playsO
+    print("      ------------GAME-------------")
+    print("X:",playsX[0],"|O",playsO[0],"    ", "X:",playsX[1],"|O",playsO[1],"    ", "X:",playsX[2],"|O",playsO[2],"    ")
+    print("")
+    print("X:",playsX[3],"|O",playsO[3],"    ", "X:",playsX[4],"|O",playsO[4],"    ", "X:",playsX[5],"|O",playsO[5],"    ")
+    print("")
+    print("X:",playsX[6],"|O",playsO[6],"    ", "X:",playsX[7],"|O",playsO[7],"    ", "X:",playsX[8],"|O",playsO[8],"    ")
+    print("")
+
 #player X
 place(4)
 #Player Y
@@ -102,19 +158,27 @@ place(4)
 #player X
 place(8)
 place(4)
-
+place(1)
+place(0)
+place(1)
+place(0)
+place(1)
+place(0)
+place(2)
+place(4)
+place(2)
+place(2)
+place(2)
+place(2)
+place(1)
+place(0)
+place(1)
+place(0)
+place(1)
+place(0)
 
 #gameboard
-print("")
-print("")
-print("      ------------GAME-------------")
-print("X:",playsX[0],"|O",playsO[0],"    ", "X:",playsX[1],"|O",playsO[1],"    ", "X:",playsO[2],"|O",playsO[2],"    ")
-print("")
-print("X:",playsX[3],"|O",playsO[3],"    ", "X:",playsX[4],"|O",playsO[4],"    ", "X:",playsO[5],"|O",playsO[5],"    ")
-print("")
-print("X:",playsX[6],"|O",playsO[6],"    ", "X:",playsX[7],"|O",playsO[7],"    ", "X:",playsO[8],"|O",playsO[8],"    ")
-print("")
-
+printBoard()
 
 observe(0)
 observe(1)
